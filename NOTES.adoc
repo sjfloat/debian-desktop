@@ -1,0 +1,9 @@
+= My Debian Desktop
+
+== Tue Feb 3 12:45:23 EST 2015
+
+== Create packer file 'wheezy'
+
+
+Format example file with `python -mjson.tool`
+
