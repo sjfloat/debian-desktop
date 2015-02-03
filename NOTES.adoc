@@ -7,3 +7,21 @@
 
 Format example file with `python -mjson.tool`
 
+Grab a baseline preseed file from: https://www.debian.org/releases/stable/example-preseed.txt
+
+For diagnostics set:
+
+    export PACKER_LOG=anything
+
+And then build like so:
+
+    packer build wheezy.json |& tee packer.out
+
+which results in:
+
+    output-virtualbox-iso
+    |-- debian-7.8.0-amd64-disk1.vmdk
+    `-- debian-7.8.0-amd64.ovf
+
+This is completely unprovisioned at this point.
+
