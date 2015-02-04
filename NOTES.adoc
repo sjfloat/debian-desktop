@@ -2,7 +2,7 @@
 
 == Tue Feb 3 12:45:23 EST 2015
 
-== Create packer file 'wheezy'
+=== Create packer file `wheezy.json`
 
 
 Format example file with `python -mjson.tool`
@@ -24,4 +24,76 @@ which results in:
     `-- debian-7.8.0-amd64.ovf
 
 This is completely unprovisioned at this point.
+
+
+There is still a gap between the above image building and provisioning. For development of the provisioning scripts,
+we can manually install the resulting vmdk, start it up and apply the provisioning. There is a Makefile we can use until
+we implement something better.
+
+
+Next I will attempt to apply ansible tasks, recording whatever is necessary to enable that, adding those steps to a shell provisioner for packer.
+
+== Wed Feb 4 08:23:47 EST 2015
+
+=== Set Up "Host-Only" networking
+
+
+    VBoxManage modifyvm "wheezy-import-test" --nic2 hostonly  --hostonlyadapter1 vboxnet1
+
+I'm not sure how to dynamically handle the adapter `vboxnet1`.
+
+After this, I'm still not seeing the 2nd interface `eth1`.
+
+=== Trouble
+
+Everything melted down after this and I couldn't access *any* of the VMs (including boot2docker). I believe it had something to do with hostonly interfaces conflicting
+somehow. I deleted them all, deleted and reinitialized boot2docker and I'm using only vboxnet0 for everything for now.
+
+    boot2docker delete
+    boot2docker init
+    boot2docker up
+
+For some (probably significant) reason, the ip 192.168.59.3 is assigned to this interface.
+
+I switched my existing desktop VM, `wheezy-base`, to use DHCP on eth1.
+
+=== Exports
+
+Contrary to docs, you _must_ restart nfsd after changing exports:
+
+    sudo nfsd restart
+    # pause a moment...
+    showmount -a
+
+In /etc/exports, I'm allowing the entire subnet, since I'm not sure yet how I'll handle DNS:
+
+    /Users/stevej/work -mapall=stevej -network 192.168.59 -mask 255.255.255.0<BS
+
+I now must change my `network-setup.sh` script to use vboxnet0 rather than generating and configuring another one.
+
+== Wed Feb 4 16:21:56 EST 2015
+
+My Makefile now imports the results of the packer build -- `debian-7.8.0-amd64.ovf`. I am able to
+access it via eth1. I had some trouble with the eth1 interface. Originally, I was setting it up in
+the `vboxmanage` block. But it was not possible to automate the interface selection with either
+preseed or boot options. So, I moved it to the `vboxmanage_post` section and everything was fine.
+
+            "vboxmanage_post": [
+                [
+                    "modifyvm",
+                    "{{.Name}}",
+                    "--nic2",
+                    "hostonly",
+                    "--hostonlyadapter2",
+                    "vboxnet0"
+                ]
+            ],
+
+
+=== TODO
+
+* Provisioning!!
+* DNS?
+* Vagrant post-processor?
+* Try build on another box
 
