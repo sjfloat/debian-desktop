@@ -1,4 +1,11 @@
 
+vm: output-virtualbox-iso/debian-7.8.0-amd64.ovf
+	VBoxManage import $<
+
 output-virtualbox-iso/debian-7.8.0-amd64-disk1.vmdk: wheezy.json http/preseed.cfg
-	packer inspect $<
+	packer build $<
+
+
+NOTES.html: NOTES.adoc
+	asciidoctor $<
 
