@@ -11,3 +11,7 @@ netmask 255.255.255.0
 network 192.168.59.0
 broadcast 192.168.59.255
 EOF
+
+# Currently necessary where I work
+sed -i '3inameserver 8.8.8.8' /etc/resolv.conf
+

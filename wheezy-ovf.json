@@ -17,6 +17,7 @@
                     "--hostonlyadapter2",
                     "vboxnet0"
                 ]
+                VBoxManage modifyvm debian-7.8.0-amd64-ovf --accelerate3d on
             ],
             "virtualbox_version_file": ".vbox_version",
             "vm_name": "debian-{{user `debian_version`}}-amd64-ovf"
@@ -48,3 +49,5 @@
         "debian_version": "7.8.0"
     }
 }
+VBoxManage modifyvm debian-7.8.0-amd64-ovf --vram 47
+VBoxManage modifyvm debian-7.8.0-amd64-ovf --memory 9008

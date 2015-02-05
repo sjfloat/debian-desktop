@@ -4,5 +4,17 @@
   tasks:
   - name: Add Backports
     apt_repository: repo='deb http://http.debian.net/debian wheezy-backports main' state=present
-  - name: Update kernel
-    apt:  name=linux-image-amd64 state=latest default_release=wheezy-backports update_cache=yes
+  - name: apt-get update
+    apt:  update_cache=yes cache_valid_time=3600
+  - name: Update kernel and friends
+    apt: pkg={{ item }} state=latest default_release=wheezy-backports
+    with_items:
+        - linux-image-amd64
+        - linux-headers-amd64
+        - build-essential
+        - dkms
+  - name: Xorg and fluxbox
+    action: apt pkg={{item}} state=installed
+    with_items:
+    - xorg
+    - fluxbox
