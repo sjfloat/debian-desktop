@@ -90,10 +90,47 @@ preseed or boot options. So, I moved it to the `vboxmanage_post` section and eve
             ],
 
 
-=== TODO
+== Thu Feb  5 11:47:11 EST 2015
 
-* Provisioning!!
-* DNS?
-* Vagrant post-processor?
-* Try build on another box
+Pushed to github:
+
+    git@github.com:sjfloat/debian-desktop.git
+
+Moved TODOs to github issues.
+
+Because building for ISOs is so time-consuming, I am using the `virtualbox-ovf` packer builder to work up
+the provisioning phase.
+
+....
+iff --git a/Makefile b/Makefile
+index 8a61d1a..9a799f0 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,11 +1,17 @@
++output-virtualbox-ovf/debian-7.8.0-amd64-ovf.ovf: wheezy-ovf.json output-virtualbox-iso/debian-7.8.0-amd64.ovf
++	packer build $<
+
+ vm: output-virtualbox-iso/debian-7.8.0-amd64.ovf
+ 	VBoxManage import $<
+
+-output-virtualbox-iso/debian-7.8.0-amd64-disk1.vmdk: wheezy.json http/preseed.cfg
++output-virtualbox-iso/debian-7.8.0-amd64.ovf output-virtualbox-iso/debian-7.8.0-amd64-disk1.vmdk: wheezy.json http/preseed.cfg
+ 	packer build $<
+
+
+ NOTES.html: NOTES.adoc
+ 	asciidoctor $<
+
++
++clean:
++	rm -rf output-virtualbox-ovf
++#	rm -rf output-virtualbox-iso
+....
+
+I need `xorg` installed before I install the guest additions, so I'll probably switch to my ansible playbook and hang it on the packer template later.
+
+
+== Thu Feb  5 14:12:49 EST 2015
+
+I can now ping the newly generated vm with ansible.
 

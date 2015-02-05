@@ -50,31 +50,9 @@
                     "1"
                 ]
             ],
-            "vboxmanage_post": [
-                [
-                    "modifyvm",
-                    "{{.Name}}",
-                    "--nic2",
-                    "hostonly",
-                    "--hostonlyadapter2",
-                    "vboxnet0"
-                ]
-            ],
             "virtualbox_version_file": ".vbox_version",
             "vm_name": "debian-{{user `debian_version`}}-amd64"
         }
-    ],
-    "provisioners": [
-        {
-          "type": "shell",
-          "execute_command": "sh '{{ .Path }}'",
-          "inline": [
-            "echo ' '                           >> /etc/network/interfaces",
-            "echo '#Added by packer'            >> /etc/network/interfaces",
-            "echo 'auto eth1'                   >> /etc/network/interfaces",
-            "echo 'iface eth1 inet dhcp'        >> /etc/network/interfaces"
-            ]
-        } 
     ],
     "variables": {
         "root_password": "blah",
