@@ -1,0 +1,45 @@
+{
+    "builders": [
+        {
+            "source_path": "output-virtualbox-iso/debian-7.8.0-amd64.ovf",
+            "shutdown_command": "/sbin/shutdown -hP now",
+            "ssh_password": "{{user `root_password`}}",
+            "ssh_port": 22,
+            "ssh_username": "root",
+            "ssh_wait_timeout": "10000s",
+            "type": "virtualbox-ovf",
+            "vboxmanage_post": [
+                [
+                    "modifyvm",
+                    "{{.Name}}",
+                    "--nic2",
+                    "hostonly",
+                    "--hostonlyadapter2",
+                    "vboxnet0"
+                ]
+            ],
+            "virtualbox_version_file": ".vbox_version",
+            "vm_name": "debian-{{user `debian_version`}}-amd64-ovf"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "file",
+            "source": "{{user `HOME`}}/.ssh/id_rsa.pub",
+            "destination": "/tmp/id_rsa.pub"
+        },
+        {
+            "execute_command": "sh '{{.Path}}'",
+            "scripts": [
+                "scripts/key.sh",
+                "scripts/networking.sh"
+            ],
+            "type": "shell"
+        }
+    ],
+    "variables": {
+        "root_password": "blah",
+        "HOME": "{{env `HOME`}}",
+        "debian_version": "7.8.0"
+    }
+}
