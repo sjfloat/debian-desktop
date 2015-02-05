@@ -1,0 +1,74 @@
+---
+- hosts: testvm
+  remote_user: root
+  tasks:
+  - name: Add Backports
+    apt_repository: repo='deb http://http.debian.net/debian wheezy-backports main' state=present
+  - name: apt-get update
+    apt:  update_cache=yes cache_valid_time=3600
+  - name: Update kernel and friends
+    apt: pkg={{ item }} state=latest default_release=wheezy-backports
+    with_items:
+        - linux-image-amd64
+        - linux-headers-amd64
+        - build-essential
+        - dkms
+  - name: X Stuff
+    action: apt pkg={{item}} state=installed
+    with_items:
+    - xorg
+    - fluxbox
+    - lightdm
+    - gnome-terminal
+    - conky
+    - xcompmgr
+    - wmctrl
+    - xutils-dev
+  - name: General tools
+    action: apt pkg={{item}} state=installed
+    with_items:
+    - vim-gtk
+    - par
+    - git
+    - sudo
+    - tcsh
+    - tree
+    - ed
+    - apvlv
+    - evince
+    - enscript
+    - gv
+    - keepassx
+  - name: Network Stuff
+    action: apt pkg={{item}} state=installed
+    with_items:
+    - openssh-server
+    - curl
+    - nmap
+  - name: System maintenance
+    action: apt pkg={{item}} state=installed
+    with_items:
+    - apt-transport-https
+  - name: Dev
+    action: apt pkg={{item}} state=installed
+    with_items:
+    - exuberant-ctags
+    - cscope
+    - cgvg
+    - ruby-dev
+    - strace
+    - ltrace
+    - ruby1.9.1-dev
+    #- lxc-docker
+  - name: Doc
+    action: apt pkg={{item}} state=installed
+    with_items:
+    - asciidoctor
+    - asciidoctor-doc
+    - graphviz
+    - texlive-latex-base
+    - texlive-xetex
+    - lmodern
+    - pandoc
+    - texlive-latex-recommended
+    - spell
