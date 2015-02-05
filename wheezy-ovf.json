@@ -35,6 +35,8 @@
                 "scripts/networking.sh"
             ],
             "type": "shell"
+        },
+        {
         }
     ],
     "variables": {
