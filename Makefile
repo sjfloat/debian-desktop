@@ -22,5 +22,5 @@ clean:
 #	rm -rf output-virtualbox-iso
 
 realclean: clean
-	VBoxManage controlvm $(OVF) poweroff
+	-VBoxManage controlvm $(OVF) poweroff
 	VBoxManage unregistervm $(OVF) --delete

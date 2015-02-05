@@ -32,11 +32,14 @@
             "execute_command": "sh '{{.Path}}'",
             "scripts": [
                 "scripts/key.sh",
-                "scripts/networking.sh"
+                "scripts/networking.sh",
+                "scripts/ansible.sh"
             ],
             "type": "shell"
         },
         {
+            "type": "ansible-local",
+            "playbook_file": "ansible/1.yml"
         }
     ],
     "variables": {
