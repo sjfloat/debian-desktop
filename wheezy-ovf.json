@@ -34,6 +34,12 @@
                     "{{.Name}}",
                     "--accelerate3d",
                     "on"
+                ],
+                [
+                    "modifyvm",
+                    "{{.Name}}",
+                    "--clipboard",
+                    "bidirectional"
                 ]
             ],
             "virtualbox_version_file": ".vbox_version",
@@ -47,13 +53,16 @@
             "destination": "/tmp/id_rsa.pub"
         },
         {
+            "type": "shell",
             "execute_command": "sh '{{.Path}}'",
             "scripts": [
                 "scripts/key.sh",
+                "scripts/sshd.sh",
+                "scripts/sudoers.sh",
                 "scripts/networking.sh",
-                "scripts/ansible.sh"
-            ],
-            "type": "shell"
+                "scripts/ansible.sh",
+                "scripts/guestadditions.sh"
+            ]
         },
         {
             "type": "ansible-local",
